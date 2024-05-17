@@ -33,11 +33,22 @@ public class Sketch extends PApplet {
     for (int i = 0; i < snowX.length; i++) {
       circle (snowX[i], snowY[i], snowDiameter);
 
-      snowY[i]+= 2;
+      snowY[i]+= 4;
 
       // Reset snowflakes
       if (snowY[i] > height) {
         snowY[i] = 0;
+      }
+
+      // If the down arrow is pressed, the snow falls faster
+      // If the up arrow is pressed, the snow falls slower
+      if (keyPressed) {
+        if (keyCode == DOWN) {
+          snowY[i] += 6;
+        }
+        else if (keyCode == UP) {
+          snowY[i] -= 0.5;
+        }
       }
     }
   }
