@@ -1,10 +1,12 @@
 import processing.core.PApplet;
 
 public class Sketch extends PApplet {
+  float circleX = 50;
+  float circleY = 50;
 
   // Related arrays for the (x, y) coordinate of the snowflakes
-  float [] snowX = new float[42];
-  float [] snowY = new float[42];
+  float [] snowX = new float[30]; // 42
+  float [] snowY = new float[30]; // 42
   int snowDiameter = 10;
 
   public void settings() {
@@ -26,10 +28,15 @@ public class Sketch extends PApplet {
 
     // Draw snow
     snow();
+
+    bluePlayerCirle();
+
+    playerLives();
   }
   
   // All other defined methods are written below:
   public void snow() {
+    fill (255);
     for (int i = 0; i < snowX.length; i++) {
       circle (snowX[i], snowY[i], snowDiameter);
 
@@ -51,5 +58,30 @@ public class Sketch extends PApplet {
         }
       }
     }
+  }
+
+  public void bluePlayerCirle() {
+    fill (214, 245, 255); // blue
+    ellipse(circleX, circleY, 50, 50);
+    if (keyPressed) {
+      if (key == 'w') {
+        circleY -= 2; 
+      }
+      else if (key == 'a') {
+        circleX -= 2;
+      }
+      else if (key == 's') {
+        circleY += 2;
+      }
+      else if (key == 'd') {
+        circleX += 2;
+      }
+    }
+  }
+
+  public void playerLives() {
+    square (width - 50, height - 380, 30);
+    square (width - 100, height - 380, 30);
+    square (width - 150, height - 380, 30);
   }
 }
