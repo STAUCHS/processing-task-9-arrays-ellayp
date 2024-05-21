@@ -84,6 +84,7 @@ public class Sketch extends PApplet {
 
     fill (255);
     for (int i = 0; i < snowX.length; i++) {
+      if(!ballHideStatus[i])
       circle (snowX[i], snowY[i], snowDiameter);
 
       // If the down arrow is pressed, the snow falls faster
@@ -102,6 +103,7 @@ public class Sketch extends PApplet {
       // Reset snowflakes
       if (snowY[i] > height) {
         snowY[i] = 0;
+        ballHideStatus[i]=false;
       }
     }
   }
@@ -181,7 +183,7 @@ public class Sketch extends PApplet {
     float clickRadius = 10;
     for (int i = 0; i < snowX.length; i++) {
       float distance = dist(snowX[i], snowY[i], mouseX, mouseY);
-      if (distance < clickRadius) {
+      if (distance < clickRadius&&mousePressed) {
         ballHideStatus[i] = true;
       }
     }
