@@ -24,6 +24,7 @@ public class Sketch extends PApplet {
 
   public void settings() {
     size(400, 400);
+    ballHideStatus = new boolean[snowX.length];
   }
 
   public void setup() {
@@ -44,9 +45,11 @@ public class Sketch extends PApplet {
     // Draw snow
     snow();
 
-    bluePlayerCirle();
-
     playerLives();
+
+    if (playerLives > 0) {
+      bluePlayerCirle();
+    }
 
     if (wPressed) {
       circleY--;
@@ -66,6 +69,19 @@ public class Sketch extends PApplet {
   
   // All other defined methods are written below:
   public void snow() {
+    for (int i = 0; i < snowX.length; i++) {
+      if (!ballHideStatus[i]) { 
+        ellipse(snowX[i], snowY[i], 20, 20); 
+
+        if (dist(snowX[i], snowY[i], circleX, circleY) < 35) {
+          playerLives--;
+          snowY[i] = 0;
+          snowX[i] = random(width);
+          ballHideStatus[i] = true;
+        }
+      }
+    }
+
     fill (255);
     for (int i = 0; i < snowX.length; i++) {
       circle (snowX[i], snowY[i], snowDiameter);
@@ -74,13 +90,13 @@ public class Sketch extends PApplet {
       // If the up arrow is pressed, the snow falls slower
       // If no arrow is pressed, the snow falls
       if (downPressed) {
-        snowY[i] += 7;
+        snowY[i] += 5;
       }
       else if (upPressed) {
-        snowY[i] += 1;
+        snowY[i] += 0.5;
       }
       else {
-        snowY[i] += 3;
+        snowY[i] += 2;
       }
 
       // Reset snowflakes
@@ -98,7 +114,7 @@ public class Sketch extends PApplet {
       rect (x, y, 30, 30);
     }
 
-    if (playerLives < 0) {
+    if (playerLives <= 0) {
       background (255);
       textSize (50);
       fill (0);
@@ -108,15 +124,15 @@ public class Sketch extends PApplet {
   }
 
   public void bluePlayerCirle() {
-    circleX = constrain (circleX, 0, width);
-    circleY = constrain (circleY, 0, height);
-    
     // Blue player circle
     fill (214, 245, 255); // blue
     ellipse(circleX, circleY, 50, 50);
   }
 
   public void keyPressed() {
+    circleX = constrain (circleX, 0, width);
+    circleY = constrain (circleY, 0, height);
+
     if (keyCode == UP) {
       upPressed = true;
     }
