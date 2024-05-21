@@ -1,16 +1,28 @@
 import processing.core.PApplet;
 
+/**
+ * Program Sketch.java is a sketch that simulates snowfales falling. 
+ * When the down arrow is pressed on the keyboard, the snow falls faster. 
+ * When the up arrow is pressed on the keyboard, the snow falls slower.
+ * Users have three lives and lose a life everytime their blue player circle controlled by their WASD keys collides with a snowflake.
+ * The game ends when all lives are lost and the screen clears to white.
+ * A user's mouse can be used to click on snowflakes and make them disappear if they are clicked on. 
+ * @author: E. Yap
+ */
 public class Sketch extends PApplet {
   // Related arrays for the (x, y) coordinate of the snowflakes
   float [] snowX = new float[15]; 
   float [] snowY = new float[15]; 
   int snowDiameter = 20; 
 
+  // Related variables for the (x, y) coordinates of the blue player circle
   float circleX = 50;
   float circleY = 50;
+
+  // Player has 3 lives
   int playerLives = 3;
 
-  // Declare blue player variables
+  // Declare blue player WASD variables
   boolean wPressed = false;
   boolean aPressed = false;
   boolean sPressed = false;
@@ -22,13 +34,23 @@ public class Sketch extends PApplet {
 
   boolean[] ballHideStatus;
 
+  /**
+   * Settings
+   * Window size
+   * @author: E. Yap
+   */
   public void settings() {
     size(400, 400);
     ballHideStatus = new boolean[snowX.length];
   }
 
+  /**
+   * Initial set up values
+   * Background colour
+   * @author: E. Yap
+   */
   public void setup() {
-    background(0);
+    background(0); // black
 
     ballHideStatus = new boolean [snowX.length];
 
@@ -39,18 +61,26 @@ public class Sketch extends PApplet {
     }
   }
 
+  /**
+   * Everything drawn to the screen
+   * @author: E. Yap
+   */
   public void draw() {
-    background (0);
+    // Background colour
+    background (0); // black
 
     // Draw snow
     snow();
 
+    // Draw rectangles indicating player lives and game over screen
     playerLives();
 
+    // If player still has lives, blue player circle still appears
     if (playerLives > 0) {
       bluePlayerCirle();
     }
 
+    // Move blue player circle if WASD is pressed
     if (wPressed) {
       circleY--;
     }
@@ -64,10 +94,17 @@ public class Sketch extends PApplet {
       circleX++;
     }
 
+    // Make snowflakes dissapear when they are clicked
     mouseClicked();
   }
   
   // All other defined methods are written below:
+  /**
+   * If the ball and snowflake collide, player loses one life and snowflake disappears.
+   * If the down arrow is pressed, the snow falls faster
+   * If the up arrow is pressed, the snow falls slower
+   * If no arrow is pressed, the snow falls
+   */
   public void snow() {
     for (int i = 0; i < snowX.length; i++) {
       if (!ballHideStatus[i]) { 
@@ -84,14 +121,14 @@ public class Sketch extends PApplet {
 
     fill (255);
     for (int i = 0; i < snowX.length; i++) {
-      if(!ballHideStatus[i])
+      if (!ballHideStatus[i])
       circle (snowX[i], snowY[i], snowDiameter);
 
       // If the down arrow is pressed, the snow falls faster
       // If the up arrow is pressed, the snow falls slower
       // If no arrow is pressed, the snow falls
       if (downPressed) {
-        snowY[i] += 5;
+        snowY[i] += 4;
       }
       else if (upPressed) {
         snowY[i] += 0.5;
@@ -103,11 +140,16 @@ public class Sketch extends PApplet {
       // Reset snowflakes
       if (snowY[i] > height) {
         snowY[i] = 0;
-        ballHideStatus[i]=false;
+        ballHideStatus[i] = false;
       }
     }
   }
 
+  /**
+   * Draws three rectangles that indicate player lives
+   * If the player has no more lives, the screen clear to white 
+   * @author: E. Yap
+   */
   public void playerLives() {
     for (int i = 0; i < playerLives; i++) {
       float x = width - 50 - i * 50;
@@ -116,21 +158,32 @@ public class Sketch extends PApplet {
       rect (x, y, 30, 30);
     }
 
+    // The game ends when all lives are lost and the screen clear to white
     if (playerLives <= 0) {
-      background (255);
-      textSize (50);
-      fill (0);
-      textAlign (CENTER, CENTER);
-      text ("Game Over", width/2, height/2);
+      background (255); // white
     }
   }
 
+  /**
+   * Draws a blue player circle
+   * @author: E. Yap
+   */
   public void bluePlayerCirle() {
     // Blue player circle
     fill (214, 245, 255); // blue
     ellipse(circleX, circleY, 50, 50);
   }
 
+  /**
+   * Constrains the blue player circle to the window.
+   * If the up arrow is pressed, the snow falls faster.
+   * If the down arrow is pressed, the snow falls slower.
+   * If the 'w' key is pressed the blue player circle moves up.
+   * If the 'a' key is pressed the blue player circle moves left.
+   * If the 's' key is pressed the blue player circle moves down.
+   * If the 'd' key is pressed the blue player circle moves right.
+   * @author: E. Yap
+   */
   public void keyPressed() {
     circleX = constrain (circleX, 0, width);
     circleY = constrain (circleY, 0, height);
@@ -156,6 +209,11 @@ public class Sketch extends PApplet {
     }
   }
 
+  /**
+   * Release for up and down arrows for the speed that the snow falls at.
+   * Release for the WASD keys for the direction of the blue player circle. 
+   * @author: E. Yap
+   */
   public void keyReleased() {
     if (keyCode == UP) {
       upPressed = false;
@@ -178,12 +236,16 @@ public class Sketch extends PApplet {
     }
   }
 
+  /**
+   * Snowflakes disappear when they are clicked
+   * @author: E. Yap
+   */
   public void mouseClicked() {
     // Make snowflakes disappear when they are clicked
     float clickRadius = 10;
     for (int i = 0; i < snowX.length; i++) {
       float distance = dist(snowX[i], snowY[i], mouseX, mouseY);
-      if (distance < clickRadius&&mousePressed) {
+      if (distance < clickRadius && mousePressed) {
         ballHideStatus[i] = true;
       }
     }
